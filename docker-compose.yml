@@ -1,0 +1,36 @@
+version: "3.9"  # optional, can be omitted
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: auth_mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+    volumes:
+      - mongo-data:/data/db
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth_app
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      - mongo
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api_gateway
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./api-gateway/.env
+    depends_on:
+      - auth-service
+
+volumes:
+  mongo-data:

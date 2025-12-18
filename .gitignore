@@ -1,0 +1,15 @@
+# Node modules
+**/node_modules
+
+# Logs
+*.log
+
+# Docker
+**/Dockerfile
+**/docker-compose.override.yml
+
+# Env files (optional if you want dev to create their own)
+**/.env
+
+# VSCode settings
+.vscode/

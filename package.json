@@ -1,0 +1,12 @@
+{
+  "name": "saas-boilerplate",
+  "private": true,
+  "workspaces": [
+    "backend/auth-service",
+    "backend/api-gateway"
+  ],
+  "scripts": {
+    "install:all": "yarn install", 
+    "start:all": "docker compose up --build -d && echo 'All services started!'"
+  }
+}
