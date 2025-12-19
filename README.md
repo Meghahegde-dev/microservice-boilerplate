@@ -25,3 +25,29 @@ saas-boilerplate-microservice/
 ├─ .gitignore
 ├─ package.json
 └─ README.md
+
+## ⚡ **Getting Started**
+
+Follow these steps to run the project locally.
+
+---
+
+### ✅ **Prerequisites**
+
+Make sure you have the following installed:
+
+- **Node.js** v18 or higher
+- **Docker** and **Docker Compose**
+- **Git**
+
+(Optional)
+- **MongoDB** (if not using Docker)
+
+---
+
+### 📥 **Clone the Repository**
+
+```bash
+git clone https://github.com/Meghahegde-dev/saas-boilerplate-microservice.git
+cd saas-boilerplate-microservice
+
