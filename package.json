@@ -3,10 +3,16 @@
   "private": true,
   "workspaces": [
     "backend/auth-service",
-    "backend/api-gateway"
+    "backend/api-gateway",
+    "backend/logger"
   ],
   "scripts": {
-    "install:all": "yarn install", 
+    "install:all": "yarn install",
     "start:all": "docker compose up --build -d && echo 'All services started!'"
+  },
+  "dependencies": {
+    "express-request-id": "^3.0.0",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

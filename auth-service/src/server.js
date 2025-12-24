@@ -3,8 +3,11 @@ require("dotenv").config();
 const connectDB = require("./db/db-connection.js");
 const routes = require("./routes/route.js");
 const cookieParser = require("cookie-parser");
+const createLogger = require("../../logger/logger"); 
 
 const app = express();
+const logger = createLogger("auth-service");
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -18,5 +21,5 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });

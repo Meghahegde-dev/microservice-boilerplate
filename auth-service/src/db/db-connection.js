@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const createLogger = require("../../logger/logger"); // path may vary
+const logger = createLogger("auth-service");
 
 const mongoUri =
   process.env.MONGO_URI || "mongodb://localhost:27017/auth_service";
@@ -6,9 +8,9 @@ const mongoUri =
 const connectDB = async () => {
   try {
     await mongoose.connect(mongoUri);
-    console.log("MongoDB connected (server)");
+    logger.info("MongoDB connected (server)");
   } catch (err) {
-    console.error("MongoDB connection failed:", err.message);
+    logger.error("MongoDB connection failed", { error: err.message, stack: err.stack });
     process.exit(1);
   }
 };

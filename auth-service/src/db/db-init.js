@@ -1,6 +1,8 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const { User, Tenant } = require("./schema-model");
+const createLogger = require("../../logger/logger"); // adjust path
+const logger = createLogger("auth-service"); // same service name
 
 const mongoUri =
   process.env.MONGO_URI || "mongodb://localhost:27017/auth_service";
@@ -8,18 +10,18 @@ const mongoUri =
 async function initDB() {
   try {
     await mongoose.connect(mongoUri);
-    console.log("MongoDB connected (init)");
+    logger.info("MongoDB connected (init)");
 
     const defaultTenant = await Tenant.findOne({ name: "Default Tenant" });
     if (!defaultTenant) {
       await Tenant.create({ name: "Default Tenant", domain: "default.com" });
-      console.log("Inserted default tenant");
+      logger.info("Inserted default tenant");
     }
 
-    console.log("MongoDB initialized successfully!");
+    logger.info("MongoDB initialized successfully!");
     process.exit(0);
   } catch (err) {
-    console.error("Error initializing MongoDB:", err);
+    logger.error("Error initializing MongoDB", { error: err.message, stack: err.stack });
     process.exit(1);
   }
 }
