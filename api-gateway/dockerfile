@@ -1,16 +1,19 @@
 # api-gateway/Dockerfile
 FROM node:20-alpine
-
 WORKDIR /app
 
-COPY api-gateway/package*.json ./
-RUN npm install
-
-COPY api-gateway/src ./src
-
-# Copy root-level logger (if needed)
+# 1. Copy the shared logger folder first
 COPY logger ./logger
 
-EXPOSE 4000
+# 2. Copy the api-gateway folder
+COPY api-gateway ./api-gateway
 
+# 3. Change working directory to the service folder
+WORKDIR /app/api-gateway
+
+# 4. Install dependencies with --install-links
+# This ensures winston and other logger dependencies are installed
+RUN npm install --install-links
+
+EXPOSE 4000
 CMD ["node", "src/server.js"]
