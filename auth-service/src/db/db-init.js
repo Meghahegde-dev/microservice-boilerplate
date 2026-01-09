@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const { User, Tenant } = require("./schema-model");
+const User = require("./db-schema/user-schema");
 const createLogger = require("../../../logger/logger");
 const logger = createLogger("auth-service"); // same service name
 
