@@ -15,13 +15,13 @@ services:
   auth-service:
     build:
       context: .
-      dockerfile: auth-service/Dockerfile
+      dockerfile: services/auth-service/Dockerfile
     environment:
       - NODE_PATH=/app
     ports:
       - "5001:5001"
     env_file:
-      - auth-service/.env
+      - services/auth-service/.env
     depends_on:
       - mongo
 

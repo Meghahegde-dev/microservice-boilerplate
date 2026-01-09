@@ -7,7 +7,7 @@ COPY logger ./logger
 
 # 2. Copy the auth-service folder
 # This makes it available at /app/auth-service
-COPY auth-service ./auth-service
+COPY services/auth-service ./auth-service
 
 # 3. Change to the service directory
 WORKDIR /app/auth-service

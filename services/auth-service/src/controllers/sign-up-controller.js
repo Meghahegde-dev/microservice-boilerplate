@@ -1,4 +1,4 @@
-const { User } = require("../db/schema-model");
+const { User } = require("../db/schema/user-schema");
 const bcrypt = require("bcrypt");
 const logger = require("../utils/logger");
 
