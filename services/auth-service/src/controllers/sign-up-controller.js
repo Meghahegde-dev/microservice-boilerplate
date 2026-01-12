@@ -1,36 +1,26 @@
-const { User } = require("../db/schema/user-schema");
-const bcrypt = require("bcrypt");
+const User = require("../db/schema/user-schema");
+const Outbox = require("../db/schema/user-outbox-schema"); 
 const logger = require("../utils/logger");
 
 const signupController = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
-    }
+    // 1️⃣ Create the User
+    const user = await User.create({ email, password });
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      email,
-      password: hashedPassword,
+    // 2️⃣ Save the EVENT to an Outbox collection
+    await Outbox.create({
+      eventType: 'user.created',
+      payload: { authUserId: user._id.toString(), email },
+      status: 'PENDING'
     });
 
-    res.status(201).json({
-      message: "User created successfully",
-      userId: user._id,
-    });
-  } catch (error) {
-    logger.error("Signup error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(201).json({ message: "User signed up" });
+
+  } catch (err) {
+    logger.error("Signup failed:", err);
+    res.status(500).json({ message: "Signup failed: " + err });
   }
 };
 
