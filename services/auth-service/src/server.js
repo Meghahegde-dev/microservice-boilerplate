@@ -37,7 +37,7 @@ const start = async () => {
     await connectDB();
 
     // 2️⃣ Connect to RabbitMQ
-     connectEvents();
+    await connectEvents();
 
 
     // 4️⃣ Start HTTP server

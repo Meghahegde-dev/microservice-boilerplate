@@ -1,4 +1,4 @@
-const { User } = require("../db/schema/user-schema");
+const User = require("../db/schema/user-schema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const logger = require("../utils/logger.js");
@@ -9,25 +9,28 @@ const signinController = async (req, res) => {
     logger.info(email);
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatch)
+      return res.status(401).json({ message: "Invalid credentials" });
 
     const accessToken = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_ACCESS_SECRET,
-      { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN }
+      { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN },
     );
 
     const refreshToken = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_REFRESH_SECRET,
-      { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN }
+      { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN },
     );
 
     res.cookie("accessToken", accessToken, {
