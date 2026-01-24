@@ -1,0 +1,36 @@
+services:
+  # AUTH SERVICE
+  - type: web
+    name: auth-service
+    env: node
+    region: oregon
+    plan: free
+    rootDir: services/auth-service
+    buildCommand: yarn install
+    startCommand: yarn start
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_ACCESS_EXPIRES_IN
+        sync: false
+      - key: JWT_REFRESH_EXPIRES_IN
+        sync: false
+      - key: RABBITMQ_URL
+        sync: false
+
+  # API GATEWAY
+  - type: web
+    name: api-gateway
+    env: node
+    region: oregon
+    plan: free
+    rootDir: api-gateway
+    buildCommand: yarn install
+    startCommand: yarn start
+    envVars:
+      - key: AUTH_SERVICE_URL
+        sync: false

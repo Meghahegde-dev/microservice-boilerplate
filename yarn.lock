@@ -16,7 +16,7 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@shared/logger@file:../logger", "@shared/logger@file:/Users/meghahegde/Documents/microservice-boilerplate/microservice-boilerplate/logger":
+"@shared/logger@file:../logger", "@shared/logger@file:/Users/meghahegde/Documents/gitprojects/microservice-boilerplate/logger":
   version "1.0.0"
   resolved "file:logger"
   dependencies:
@@ -57,7 +57,7 @@ accepts@~1.3.8:
     mime-types "~2.1.34"
     negotiator "0.6.3"
 
-"api-gateway@file:/Users/meghahegde/Documents/microservice-boilerplate/microservice-boilerplate/api-gateway":
+"api-gateway@file:/Users/meghahegde/Documents/gitprojects/microservice-boilerplate/api-gateway":
   version "1.0.0"
   resolved "file:api-gateway"
   dependencies:
