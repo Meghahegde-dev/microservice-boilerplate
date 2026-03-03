@@ -1,57 +1,38 @@
-const User = require("../db/schema/user-schema");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const logger = require("../utils/logger.js");
+const { signinService } = require("../services/sign-in-service");
+const logger = require("../utils/logger");
 
 const signinController = async (req, res) => {
   try {
     const { email, password } = req.body;
-    logger.info(email);
 
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
-    }
+    // Call service
+    const { accessToken, refreshToken, user } = await signinService(email, password);
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(401).json({ message: "Invalid credentials" });
-
-    const accessToken = jwt.sign(
-      { userId: user._id, email: user.email },
-      process.env.JWT_ACCESS_SECRET,
-      { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN },
-    );
-
-    const refreshToken = jwt.sign(
-      { userId: user._id, email: user.email },
-      process.env.JWT_REFRESH_SECRET,
-      { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN },
-    );
-
+    // Set tokens as secure, httpOnly cookies
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
+      sameSite: "Strict",
+      maxAge: 15 * 60 * 1000 // 15 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
-    return res.json({ message: "Logged in successfully" });
+    // Send user info only
+    res.status(200).json({
+      message: "Login successful",
+      user
+    });
+
   } catch (err) {
-    logger.error(err);
-    return res.status(500).json({ message: "Internal server error" });
+    logger.error("Login failed:", err);
+    res.status(err.status || 500).json({ message: err.message || "Login failed" });
   }
 };
 
-module.exports = signinController;
+module.exports = { signinController };
