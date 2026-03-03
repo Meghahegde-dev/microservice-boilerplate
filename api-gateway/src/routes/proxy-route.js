@@ -2,9 +2,28 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const logger = require("../utils/logger");
 
 module.exports = (app) => {
-  // Use environment variable for the target service
-  const authServiceUrl = process.env.AUTH_SERVICE_URL || "http://auth-service:5001";
+  const authServiceUrl =
+    process.env.AUTH_SERVICE_URL || "http://auth-service:5001";
 
+  app.use(
+    "/auth/google/callback",
+    createProxyMiddleware({
+      target: authServiceUrl,
+      changeOrigin: true,
+      pathRewrite: { "^/auth/google/callback": "/google-callback" },
+    }),
+  );
+
+  app.use(
+    "/auth/google",
+    createProxyMiddleware({
+      target: authServiceUrl,
+      changeOrigin: true,
+      pathRewrite: { "^/auth/google": "/google-login" },
+    }),
+  );
+
+  // 2️⃣ Catch-all proxy for other routes
   app.use(
     "/",
     createProxyMiddleware({
@@ -20,9 +39,10 @@ module.exports = (app) => {
         }
       },
       onError(err, req, res) {
-        logger.error("Proxy error:", err);
+        console.log(err);
+        logger.error("Proxy error:", err);``
         res.status(500).send("Proxy error");
       },
-    })
+    }),
   );
 };
