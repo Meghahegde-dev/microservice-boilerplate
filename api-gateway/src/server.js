@@ -14,6 +14,11 @@ app.use((req, res, next) => {
 
 proxyRoutes(app);
 
+app.get("/health", (req, res) => {
+  logger.info("Health check requested");
+  res.json({ status: "ok", gateway: true });
+});
+
 app.get("/", (req, res) => res.send("API Gateway running!"));
 
 const PORT = process.env.PORT || 4000;
